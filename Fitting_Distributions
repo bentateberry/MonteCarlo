@@ -1,0 +1,57 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from statsmodels.distributions.empirical_distribution import ECDF
+from scipy import stats
+from IPython.display import display, HTML
+
+##FUNCTION FOR PLOTTING DISTRIBUTIONS
+def plt_my_data(x):
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 2.5))
+    ex = ECDF(x)
+    ax1.hist(x)
+    ax2.plot(ex.x,ex.y)
+    
+##IMPORT A DATA FRAME
+filepath= '#FILE PATH GOES HERE'
+df=pd.read_csv(filepath)
+#shows headers of columns
+df.columns
+
+def distribution_checker(COLUMN_NAME_AS_STRING,COLUMN_KEY):
+    #Plots the histogram of the column of interest
+    plt.hist(df[COLUMN_NAME_AS_STRING])
+    #Deletes all of the other columns
+    x=np.array(df.iloc[:,COLUMN_KEY])
+    plt.hist(x)
+    #List of distributions to check through
+    list_of_dists = ['alpha','anglit','arcsine','beta','betaprime',
+                     'bradford','burr','burr12','cauchy','chi','chi2','cosine',
+                     'dgamma','dweibull','erlang','expon','exponnorm','exponweib',
+                     'exponpow','f','fatiguelife','fisk','foldcauchy','foldnorm',
+                     'genlogistic','genpareto','gennorm',
+                     'genexpon','genextreme','gausshyper','gamma','gengamma','genhalflogistic',
+                     'gibrat','gompertz','gumbel_r','gumbel_l','halfcauchy','halflogistic',
+                     'halfnorm','halfgennorm','hypsecant','invgamma','invgauss','invweibull',
+                     'johnsonsb','johnsonsu','kstwobign','laplace','levy','levy_l','logistic',
+                     'loggamma','loglaplace','lognorm','lomax','maxwell','mielke','nakagami',
+                     'ncx2','ncf','nct','norm','pareto','pearson3','powerlaw','powerlognorm',
+                     'powernorm','rdist','rayleigh','rice','recipinvgauss',
+                     'semicircular','t','triang','truncexpon','truncnorm','tukeylambda',
+                     'uniform','vonmises','vonmises_line','wald','weibull_min','weibull_max']
+    #we can iterate through each of these distributions using a for loop and test the fit at each iteration:
+    results = []
+    for i in list_of_dists:
+        dist = getattr(stats, i)
+        param = dist.fit(x)
+        a = stats.kstest(x, i, args=param)
+        results.append((i,a[0],a[1]))
+        
+    
+    # sort the list with largest p values at the top:
+    results.sort(key=lambda x:float(x[2]), reverse=True)
+    
+    #print results with some useful formatting:
+    for j in results:
+        print("{}: statistic={}, pvalue={}".format(j[0], round(j[1],3), round(j[2],3)))
+    # 'results' is now a sorted list containing the distribution name, test statistic value, and p-value of each distribution tested.
