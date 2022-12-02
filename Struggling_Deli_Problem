@@ -11,24 +11,7 @@ def plt_my_data(x):
     ex = ECDF(x)
     ax1.hist(x)
     ax2.plot(ex.x,ex.y)
-    
-##FINDING PERCENTILE
-results=np.zeros(1000)
-for i in range(0,1000):
-    x1=stats.triang.rvs(loc=23,scale=12,c=7/12)
-    x2=stats.norm.rvs(loc=15,scale=5)
-    y=x1+x2
-    results[i]=y
-plt_my_data(results)
-results.sort()
-results[990]
-results[100]
-
-##STRUGGLING DELI PROBLEM
-##A deli is open for 2 hours. They sell Burgers, Wraps, and Salads and
-##have associated profits from selling each.
-##Each menu item also has an associated distribution that includes varying prep times.
-
+ 
 #Create dataframe of zeros to be replaced by runs through simulation
 pr_results=np.zeros(1000)
 for i in range(0,1000):
@@ -61,7 +44,9 @@ for i in range(0,1000):
     pr_results[i]=pr
 
 plt_my_data(pr_results)
-#FINDING PERCENTILE
+
+##FINDING PERCENTILE
+
 #Sort the outputs
 pr_results.sort()
 #Depending on number of times you run the deli simulation the value you input will change.
