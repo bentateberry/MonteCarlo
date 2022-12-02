@@ -1,0 +1,71 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from statsmodels.distributions.empirical_distribution import ECDF
+from scipy import stats
+from IPython.display import display, HTML
+
+##FUNCTION TO PLOT DATA
+def plt_my_data(x):
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 2.5))
+    ex = ECDF(x)
+    ax1.hist(x)
+    ax2.plot(ex.x,ex.y)
+    
+##FINDING PERCENTILE
+results=np.zeros(1000)
+for i in range(0,1000):
+    x1=stats.triang.rvs(loc=23,scale=12,c=7/12)
+    x2=stats.norm.rvs(loc=15,scale=5)
+    y=x1+x2
+    results[i]=y
+plt_my_data(results)
+results.sort()
+results[990]
+results[100]
+
+##STRUGGLING DELI PROBLEM
+##A deli is open for 2 hours. They sell Burgers, Wraps, and Salads and
+##have associated profits from selling each.
+##Each menu item also has an associated distribution that includes varying prep times.
+
+#Create dataframe of zeros to be replaced by runs through simulation
+pr_results=np.zeros(1000)
+for i in range(0,1000):
+    #pr = profit
+    pr=0
+    #lt = lunchtime
+    lt=0
+    #while loop to account for 120 minute constraint of lunch
+    while lt<120:
+        # To incorporate the probablity of ordering burger, wrap, or salad
+        # divvying up a unifrom distribution is a good way to utilize it for discrete distributions
+        r=stats.uniform.rvs(loc=0,scale=1,size=1)
+        #Add the time and proft of each assocaited item if it is selected
+        #BURGER
+        if r<0.3:
+            # t = time to prepare one burger
+            t=stats.norm.rvs(loc=3,scale=1,size=1)
+            # p = profit from selling one burger
+            p=1.5
+        #WRAP
+        if r>=0.3 and r<0.8:
+            t=stats.norm.rvs(loc=2,scale=0.5,size=1)
+            p=0.5
+        #SALAD
+        if r>=0.8:
+            t=stats.norm.rvs(loc=1.5,scale=0.25,size=1)
+            p=0.5
+        lt=lt+t
+        pr=pr+p
+    pr_results[i]=pr
+
+plt_my_data(pr_results)
+#FINDING PERCENTILE
+#Sort the outputs
+pr_results.sort()
+#Depending on number of times you run the deli simulation the value you input will change.
+#99th percentile
+pr_results[990]
+#10th percentile
+pr_results[100]
