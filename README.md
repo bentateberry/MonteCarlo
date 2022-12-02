@@ -1,2 +1,8 @@
 # MonteCarlo
-Python Introduction to Monte Carlo Simulation
+Struggling Deli Problem
+
+Cadet Benjamin Berry
+COL Evangelista
+EM384: Analytical Methods for Engineering Management
+12 December 2022
+
